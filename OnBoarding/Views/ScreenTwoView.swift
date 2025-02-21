@@ -41,5 +41,5 @@ struct ScreenTwoView: View {
 }
 
 #Preview {
-    ScreenTwoView(page: PageInfo(label: "Sample", text: "Sample Text", image: .screenTwo), backgroundColor: .blue)
+    ScreenTwoView(page: PageInfo(label: "Sample", text: "Sample Text", image: .screenTwo), backgroundColor: Color(UIColor(hex: "#F0CF69")))
 }

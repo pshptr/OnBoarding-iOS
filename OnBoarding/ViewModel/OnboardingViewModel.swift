@@ -1,7 +1,7 @@
 import SwiftUI
 
 class OnboardingViewModel: ObservableObject {
-    @Published var isWelcomeSheetShowing: Bool = true
+    @Published var currentPageIndex: Int = 0
     let pages: [PageInfo] = [
         PageInfo(label: "Your first car without a driver's license", text: "Goes to meet people who just got their license", image: .screenOne),
         PageInfo(label: "Always there: more than 1000 cars in Tbilisi", text: "Our company is a leader by the number of cars in the fleet", image: .screenTwo),
@@ -12,12 +12,12 @@ class OnboardingViewModel: ObservableObject {
     
     func backgroundColor(for index: Int) -> Color {
         switch index {
-        case 0: return Color(red: 1.0, green: 0.0, blue: 0.0)
-        case 1: return Color(red: 0.0, green: 1.0, blue: 0.0)
-        case 2: return Color(red: 0.0, green: 0.0, blue: 1.0)
-        case 3: return Color(red: 1.0, green: 1.0, blue: 0.0)
-        case 4: return Color(red: 0.5, green: 0.0, blue: 0.5)
-        default: return Color(red: 1.0, green: 1.0, blue: 1.0)
+        case 0: return Color(UIColor(hex: "#F0CF69"))
+        case 1: return Color(UIColor(hex: "#B7ABFD"))
+        case 2: return Color(UIColor(hex: "#EFB491"))
+        case 3: return Color(UIColor(hex: "#95B6FF"))
+        case 4: return Color(UIColor(hex: "#95B6FF"))
+        default: return Color(UIColor(hex: "#FFFFFF"))
         }
     }
 } 

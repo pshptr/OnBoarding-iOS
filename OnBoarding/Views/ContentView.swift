@@ -28,21 +28,38 @@ struct ContentView: View {
     @StateObject private var viewModel = OnboardingViewModel()
 
     var body: some View {
-        TabView {
-            ForEach(Array(viewModel.pages.enumerated()), id: \.element.id) { index, page in
-                ScreenOneView(page: page, backgroundColor: viewModel.backgroundColor(for: index))
-                ScreenTwoView(page: page, backgroundColor: viewModel.backgroundColor(for: index))
-                ScreenThreeView(page: page, backgroundColor: viewModel.backgroundColor(for: index))
-                ScreenFourView(page: page, backgroundColor: viewModel.backgroundColor(for: index))
-                ScreenFiveView(page: page, backgroundColor: viewModel.backgroundColor(for: index))
+        ZStack {
+            viewModel.backgroundColor(for: viewModel.currentPageIndex)
+                .ignoresSafeArea()
+            TabView(selection: $viewModel.currentPageIndex) {
+                ForEach(Array(viewModel.pages.enumerated()), id: \.element.id) { index, page in
+                    VStack {
+                        Text(page.label)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .foregroundColor(.white)
+                        
+                        Text(page.text)
+                            .fontWeight(.medium)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .foregroundColor(.white)
+                        
+                        Image(page.image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding()
+                    }
+                    .tag(index)
+                }
             }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .tabViewStyle(.page)
-        .interactiveDismissDisabled()
-        .onAppear {
-            UIPageControl.appearance().currentPageIndicatorTintColor = .label
-            UIPageControl.appearance().pageIndicatorTintColor = .systemGray
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+            .onAppear {
+                UIPageControl.appearance().currentPageIndicatorTintColor = .label
+                UIPageControl.appearance().pageIndicatorTintColor = .systemGray
+            }
         }
     }
 }
@@ -70,17 +87,22 @@ struct WelcomeView: View {
     @Binding var isWelcomeSheetShowing: Bool
 
     var body: some View {
-        TabView {
-            ForEach(Array(pages.enumerated()), id: \.element.id) { index, page in
-                PageView(page: page, backgroundColor: backgroundColor(for: index))
+        ZStack {
+            TabView {
+                ForEach(Array(pages.enumerated()), id: \.element.id) { index, page in
+                    ZStack {
+                        backgroundColor(for: index)
+                            .ignoresSafeArea() // Ensure background fills the screen
+                        PageView(page: page, backgroundColor: backgroundColor(for: index))
+                    }
+                }
             }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .tabViewStyle(.page)
-        .interactiveDismissDisabled()
-        .onAppear {
-            UIPageControl.appearance().currentPageIndicatorTintColor = .label
-            UIPageControl.appearance().pageIndicatorTintColor = .systemGray
+            .tabViewStyle(PageTabViewStyle())
+            .interactiveDismissDisabled()
+            .onAppear {
+                UIPageControl.appearance().currentPageIndicatorTintColor = .label
+                UIPageControl.appearance().pageIndicatorTintColor = .systemGray
+            }
         }
     }
     
@@ -103,7 +125,7 @@ struct PageView: View {
     var body: some View {
         ZStack {
             backgroundColor
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
             VStack {
                 Text(page.label)
                     .font(.largeTitle)
@@ -124,7 +146,26 @@ struct PageView: View {
                     .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .edgesIgnoringSafeArea(.vertical)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
+    }
+}
+
+class OnboardingViewModel: ObservableObject {
+    @Published var currentPageIndex: Int = 0
+    let pages: [PageInfo] = [
+        // Define your pages here
+    ]
+
+    func backgroundColor(for index: Int) -> Color {
+        switch index {
+        case 0: return Color(UIColor(hex: "#F0CF69"))
+        case 1: return Color(UIColor(hex: "#B7ABFD"))
+        case 2: return Color(UIColor(hex: "#EFB491"))
+        case 3: return Color(UIColor(hex: "#95B6FF"))
+        case 4: return Color(UIColor(hex: "#95B6FF"))
+        default: return Color(UIColor(hex: "#FFFFFF"))
+        }
     }
 }
